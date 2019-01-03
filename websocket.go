@@ -6,7 +6,6 @@ import (
 
 type event_list_s struct {
     Disconnect func(*Websocket_s, *websocket.Conn)
-
 }
 
 type event_s struct {
@@ -20,7 +19,13 @@ type Websocket_s struct {
     Event       event_s
 }
 
-func New() Websocket_s {
+var webServices map[string]Websocket_s = map[string]Websocket_s{}
+
+func Get(name string) Websocket_s {
+    return webServices[name];
+}
+
+func New(name string) Websocket_s {
     r := Websocket_s{
         handler : make(map[string]func(*Websocket_s, *websocket.Conn, map[string]interface{})error, 0),
         clients : s_clients{
@@ -28,5 +33,6 @@ func New() Websocket_s {
             make(map[*websocket.Conn]*s_client),
         },
     }
+    webServices[name] = r
     return r
 }

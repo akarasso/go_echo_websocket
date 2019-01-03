@@ -4,54 +4,52 @@ import (
     "github.com/gorilla/websocket"
     "errors"
     "strconv"
+    "log"
 )
 
 func (s *Websocket_s) AddClient(id interface{}, ws *websocket.Conn) error {
     switch id.(type) {
     case string:
-        if user, exist := s.clients.byID[id]; exist {
-			user.conn = append(user.conn, ws)
-            i, err := strconv.Atoi(id.(string))
-            if err != nil {
-                return err
-            }
+        i, err := strconv.Atoi(id.(string))
+        if err != nil {
+            log.Println(err)
+            return err
+        }
+        if user, exist := s.clients.byID[i]; exist {
+			user.Conn = append(user.Conn, ws)
 			s.clients.byID[i] = user
 			s.clients.byConn[ws] = user
 		} else {
 			n := new(s_client)
-            i, err := strconv.Atoi(id.(string))
-            if err != nil {
-                return err
-            }
-            n.id = i
-			n.conn = append(n.conn, ws)
+            n.ID = i
+			n.Conn = append(n.Conn, ws)
 			s.clients.byID[i] = n
 			s.clients.byConn[ws] = n
 		}
         return nil
     case int:
-        if user, exist := s.clients.byID[id]; exist {
-			user.conn = append(user.conn, ws)
+        if user, exist := s.clients.byID[id.(int)]; exist {
+			user.Conn = append(user.Conn, ws)
 			s.clients.byID[id.(int)] = user
 			s.clients.byConn[ws] = user
 		} else {
 			n := new(s_client)
-			n.id = id.(int)
-			n.conn = append(n.conn, ws)
-			s.clients.byID[n.id] = n
+			n.ID = id.(int)
+			n.Conn = append(n.Conn, ws)
+			s.clients.byID[n.ID] = n
 			s.clients.byConn[ws] = n
 		}
         return nil
 	case float64:
-		if user, exist := s.clients.byID[id]; exist {
-			user.conn = append(user.conn, ws)
+		if user, exist := s.clients.byID[int(id.(float64))]; exist {
+			user.Conn = append(user.Conn, ws)
 			s.clients.byID[int(id.(float64))] = user
 			s.clients.byConn[ws] = user
 		} else {
 			n := new(s_client)
-			n.id = int(id.(float64))
-			n.conn = append(n.conn, ws)
-			s.clients.byID[n.id] = n
+			n.ID = int(id.(float64))
+			n.Conn = append(n.Conn, ws)
+			s.clients.byID[n.ID] = n
 			s.clients.byConn[ws] = n
 		}
         return nil

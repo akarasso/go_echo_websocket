@@ -6,11 +6,15 @@ import (
 
 func (s *Websocket_s)RemoveClient(ws *websocket.Conn) {
 	if user, exist := s.clients.byConn[ws]; exist{
-		user.conn = filterConnection(user.conn, ws)
-		if len(user.conn) == 0 {
-            s.Event.Auth.Disconnect(s, ws)
+		user.Conn = filterConnection(user.Conn, ws)
+		if len(user.Conn) == 0 {
+            if s.Event.Auth.Disconnect != nil {
+                s.Event.Auth.Disconnect(s, ws)
+            }
 		}
 	} else {
-        s.Event.UnAuth.Disconnect(s, ws)
+        if s.Event.UnAuth.Disconnect != nil {
+            s.Event.UnAuth.Disconnect(s, ws)
+        }
     }
 }

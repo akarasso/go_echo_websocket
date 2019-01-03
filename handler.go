@@ -12,13 +12,11 @@ var (
 )
 
 func (s *Websocket_s)Handler(c echo.Context) error {
-	log.Println("New client on websocket")
 	var data map[string]interface{}
 	ws, err := upgrader.Upgrade(c.Response(), c.Request(), nil)
 	if err != nil {
 		return err
 	}
-	log.Println("Call websocket")
 	defer ws.Close()
 	ws.SetCloseHandler(func (code int, text string) error {
 		s.RemoveClient(ws)
@@ -27,11 +25,9 @@ func (s *Websocket_s)Handler(c echo.Context) error {
 	for {
 		_, msg, err := ws.ReadMessage()
 		if err != nil {
-			c.Logger().Error(err)
 			break
 		}
 		if err := json.Unmarshal(msg, &data); err != nil {
-			log.Println(err)
 			continue
 		}
 		action, exist := data["action"]
@@ -46,7 +42,10 @@ func (s *Websocket_s)Handler(c echo.Context) error {
 				log.Println("Try to execute unknow action '" + action.(string) + "'")
 				continue
 			}
-			return f(s, ws, data)
+			ret := f(s, ws, data)
+			if ret != nil {
+				return ret
+			}
 		default:
 			log.Println("action must be a string")
 		}
