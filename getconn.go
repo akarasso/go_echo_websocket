@@ -12,23 +12,22 @@ func (s *Websocket_s) GetConn(by interface{}) (*s_client, error) {
 			return conn, nil
 		}
 	case float64:
-		if conn, exist := s.clients.byID[int(by.(float64))]; exist {
+        ids := strconv.FormatFloat(by.(float64), 'E', -1, 64)
+		if conn, exist := s.clients.byID[ids]; exist {
 			return conn, nil
 		}
 	case int64:
-		if conn, exist := s.clients.byID[int(by.(int64))]; exist {
+        ids := strconv.FormatInt(by.(int64), 16)
+		if conn, exist := s.clients.byID[ids]; exist {
 			return conn, nil
 		}
 	case int:
-		if conn, exist := s.clients.byID[by.(int)]; exist {
+        ids := strconv.Itoa(by.(int))
+		if conn, exist := s.clients.byID[ids]; exist {
 			return conn, nil
 		}
 	case string:
-		x, err := strconv.Atoi(by.(string))
-        if err != nil {
-            return nil, err
-        }
-		if conn, exist := s.clients.byID[x]; exist {
+		if conn, exist := s.clients.byID[by.(string)]; exist {
 			return conn, nil
 		}
 	}

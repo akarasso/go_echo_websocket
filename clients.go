@@ -10,7 +10,7 @@ type s_clients struct {
 }
 
 type s_client struct {
-	ID		interface{}
+	ID		string
 	Conn	[]*websocket.Conn
     log     bool
 }

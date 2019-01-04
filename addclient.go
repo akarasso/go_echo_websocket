@@ -4,50 +4,47 @@ import (
     "github.com/gorilla/websocket"
     "errors"
     "strconv"
-    "log"
+    // "log"
 )
 
 func (s *Websocket_s) AddClient(id interface{}, ws *websocket.Conn) error {
     switch id.(type) {
     case string:
-        i, err := strconv.Atoi(id.(string))
-        if err != nil {
-            log.Println(err)
-            return err
-        }
-        if user, exist := s.clients.byID[i]; exist {
+        if user, exist := s.clients.byID[id.(string)]; exist {
 			user.Conn = append(user.Conn, ws)
-			s.clients.byID[i] = user
+			s.clients.byID[id.(string)] = user
 			s.clients.byConn[ws] = user
 		} else {
 			n := new(s_client)
-            n.ID = i
+            n.ID = id.(string)
 			n.Conn = append(n.Conn, ws)
-			s.clients.byID[i] = n
+			s.clients.byID[id.(string)] = n
 			s.clients.byConn[ws] = n
 		}
         return nil
     case int:
-        if user, exist := s.clients.byID[id.(int)]; exist {
+        ids := strconv.Itoa(id.(int))
+        if user, exist := s.clients.byID[ids]; exist {
 			user.Conn = append(user.Conn, ws)
-			s.clients.byID[id.(int)] = user
+			s.clients.byID[ids] = user
 			s.clients.byConn[ws] = user
 		} else {
 			n := new(s_client)
-			n.ID = id.(int)
+			n.ID = ids
 			n.Conn = append(n.Conn, ws)
 			s.clients.byID[n.ID] = n
 			s.clients.byConn[ws] = n
 		}
         return nil
 	case float64:
-		if user, exist := s.clients.byID[int(id.(float64))]; exist {
+        ids := strconv.FormatFloat(id.(float64), 'E', -1, 64)
+        if user, exist := s.clients.byID[ids]; exist {
 			user.Conn = append(user.Conn, ws)
-			s.clients.byID[int(id.(float64))] = user
+			s.clients.byID[ids] = user
 			s.clients.byConn[ws] = user
 		} else {
 			n := new(s_client)
-			n.ID = int(id.(float64))
+			n.ID = ids
 			n.Conn = append(n.Conn, ws)
 			s.clients.byID[n.ID] = n
 			s.clients.byConn[ws] = n

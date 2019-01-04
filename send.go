@@ -4,7 +4,7 @@ import (
 	"log"
 )
 
-func (s *Websocket_s)Send(id interface {}, data interface{}) {
+func (s *Websocket_s)Send(id interface{}, data interface{}) {
 	user, err := s.GetConn(id)
 	if err != nil {
 		log.Println(err)
