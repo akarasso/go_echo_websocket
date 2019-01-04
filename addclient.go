@@ -37,7 +37,7 @@ func (s *Websocket_s) AddClient(id interface{}, ws *websocket.Conn) error {
 		}
         return nil
 	case float64:
-        ids := strconv.FormatFloat(id.(float64), 'E', -1, 64)
+        ids := strconv.Itoa(int(id.(float64)))
         if user, exist := s.clients.byID[ids]; exist {
 			user.Conn = append(user.Conn, ws)
 			s.clients.byID[ids] = user
