@@ -18,7 +18,7 @@ func (s *Websocket_s) GetConn(by interface{}) (*s_client, error) {
 			return conn, nil
 		}
 	case int64:
-        ids := strconv.FormatInt(by.(int64), 16)
+        ids := strconv.FormatInt(by.(int64), 10)
 		if conn, exist := s.clients.byID[ids]; exist {
 			return conn, nil
 		}
