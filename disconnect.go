@@ -9,12 +9,12 @@ func (s *Websocket_s)RemoveClient(ws *websocket.Conn) {
 		user.Conn = filterConnection(user.Conn, ws)
 		if len(user.Conn) == 0 {
             if s.Event.Auth.Disconnect != nil {
-                s.Event.Auth.Disconnect(s, ws)
+                s.Event.Auth.Disconnect(s, user.ID)
             }
 		}
 	} else {
         if s.Event.UnAuth.Disconnect != nil {
-            s.Event.UnAuth.Disconnect(s, ws)
+            s.Event.UnAuth.Disconnect(s, "0")
         }
     }
 }

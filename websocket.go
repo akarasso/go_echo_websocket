@@ -5,7 +5,7 @@ import (
 )
 
 type event_list_s struct {
-    Disconnect func(*Websocket_s, *websocket.Conn)
+    Disconnect func(*Websocket_s, string)
 }
 
 type event_s struct {
